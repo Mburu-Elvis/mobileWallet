@@ -1,13 +1,13 @@
-package natujenge.com.mobileWallet;
+package natujenge.com.mobilleWallet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MobileWalletApplication {
+public class MobilleWalletApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MobileWalletApplication.class, args);
+		SpringApplication.run(MobilleWalletApplication.class, args);
 	}
 
 }
