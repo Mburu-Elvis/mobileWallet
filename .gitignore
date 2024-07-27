@@ -31,8 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-./project_breakdown
-./mobileWallet/20240716-natujenge-cohort-challenge.md
-./20240716-natujenge-cohort-challenge.md
-/home/crackygeek/Desktop/Natujenge_Main/mobileWallet/mobilleWallet/token
+project_breakdown
+20240716-natujenge-cohort-challenge.md
 token
