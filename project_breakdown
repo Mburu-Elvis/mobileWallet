@@ -16,16 +16,5 @@ UI
 		   - if verified signup/signin
 		   - It may have an expiry time
 
- Logic Account Creation
-    - user enters details in UI
-        - inputs are validated
-            - email and phoneNumber
-        - upon clicking create/login account the user will required to submit the OTP generated
-
-        - we store the details in variables
-        - trigger otp backend return OTP  ======= DONE
-            - api generate/send OTP
-            - frontend will store the return OTP in another variable
-            - user enters the PIN then verification/validation
-            - if validated
-                - account can be created
+	
+		    
