@@ -20,6 +20,9 @@ public class Account {
     @Column(length = 50, nullable = false, unique = true)
     private String email;
 
+    @Column(length = 12, nullable = false, unique = true)
+    private String phoneNumber;
+
     @Column(length = 32, nullable = false)
     private String pin;
 
@@ -63,6 +66,14 @@ public class Account {
         this.pin = pin;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -70,6 +81,7 @@ public class Account {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", pin='" + pin + '\'' +
                 '}';
     }
