@@ -1,12 +1,13 @@
 package natujenge.com.mobilleWallet.repository;
 
-import natujenge.com.mobilleWallet.domain.Account;
+import natujenge.com.mobilleWallet.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, UUID> {
-    Account findByPhoneNumber(String phoneNumber);
+public interface UserRepository extends JpaRepository<User, UUID> {
+    User findByUsername(String username);
+    User findByEmail(String email);
 }
