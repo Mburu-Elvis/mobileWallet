@@ -1,0 +1,101 @@
+package natujenge.com.mobilleWallet.service;
+
+import natujenge.com.mobilleWallet.domain.User;
+import natujenge.com.mobilleWallet.repository.UserRepository;
+import natujenge.com.mobilleWallet.service.dto.UserRequestDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public String generateOTP(String phoneNumber) {
+        String otp = "Your verification code for mobileWallet\n";
+        Random rand = new Random();
+        otp = otp + (rand.nextInt(9999 - 1001) + 1000);
+
+        String url = "https://api2.tiaraconnect.io/api/messaging/sendsms";
+
+        WebClient webClient = WebClient.create(url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Authorization", "");
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("to", phoneNumber);
+        requestBody.put("from", "TIARACONECT");
+        requestBody.put("message", otp);
+        requestBody.put("refId", "09wiwu088e");
+
+        // Perform the POST request and handle the response
+        webClient.post()
+                .headers(httpHeaders -> httpHeaders.addAll(headers))
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .flatMap(res -> {
+                    return Mono.just("OTP sent");
+                })
+                .block(); // Block to wait for the response
+
+        return otp;
+    }
+
+    public void createUser(UserRequestDTO userRequestDTO) {
+       User user = userRepository.findByUsername(userRequestDTO.getUsername());
+
+       if (user != null) {
+           throw new RuntimeException();
+       }
+
+       User usr = new User();
+       usr.setFullname(userRequestDTO.getFullname());
+       usr.setUsername(userRequestDTO.getUsername());
+       usr.setEmail(userRequestDTO.getEmail());
+       usr.setPhoneNumber(userRequestDTO.getPhoneNumber());
+       usr.setPassword(userRequestDTO.getPassword());
+       usr.setCreated_at(LocalDateTime.now());
+       usr.setUpdated_at(LocalDateTime.now());
+       User savedAccount = userRepository.save(usr);
+    }
+
+    public ResponseEntity<?> userSignin(UserRequestDTO userRequestDTO) {
+        if (userRequestDTO == null) {
+            return ResponseEntity.badRequest().body("Request body is missing");
+        }
+
+        if ( userRequestDTO.getEmail() == null && userRequestDTO.getUsername() == null || userRequestDTO.getPassword() == null ) {
+            return ResponseEntity.badRequest().body("email or phone number is required");
+        }
+
+        User usr = userRepository.findByEmail(userRequestDTO.getEmail());
+        if (usr == null && userRequestDTO.getUsername() != null) {
+            usr = userRepository.findByUsername(userRequestDTO.getUsername());
+        }
+
+        if (usr == null) {
+            return ResponseEntity.badRequest().body("user not found");
+        }
+
+        if (!userRequestDTO.getPassword().equals(usr.getPassword())) {
+            return ResponseEntity.badRequest().body("invalid email  or password. Please try again");
+        }
+        Map response = new HashMap<>();
+        response.put("message", "signin successful");
+        return ResponseEntity.ok().body(response);
+    }
+}
