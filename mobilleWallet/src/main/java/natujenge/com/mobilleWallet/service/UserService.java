@@ -12,10 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -23,7 +20,8 @@ public class UserService {
     private UserRepository userRepository;
 
     public String generateOTP(String phoneNumber) {
-        String otp = "Your verification code for mobileWallet\n";
+        String otpMessage = "Your verification code for mobileWallet\n";
+        String otp = "";
         Random rand = new Random();
         otp = otp + (rand.nextInt(9999 - 1001) + 1000);
 
@@ -38,7 +36,7 @@ public class UserService {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("to", phoneNumber);
         requestBody.put("from", "TIARACONECT");
-        requestBody.put("message", otp);
+        requestBody.put("message", otpMessage + otp);
         requestBody.put("refId", "09wiwu088e");
 
         // Perform the POST request and handle the response
@@ -62,15 +60,35 @@ public class UserService {
            throw new RuntimeException();
        }
 
-       User usr = new User();
-       usr.setFullname(userRequestDTO.getFullname());
-       usr.setUsername(userRequestDTO.getUsername());
-       usr.setEmail(userRequestDTO.getEmail());
-       usr.setPhoneNumber(userRequestDTO.getPhoneNumber());
-       usr.setPassword(userRequestDTO.getPassword());
-       usr.setCreated_at(LocalDateTime.now());
-       usr.setUpdated_at(LocalDateTime.now());
-       User savedAccount = userRepository.save(usr);
+       Scanner otpObj = new Scanner(System.in);
+
+       try {
+           String otp = generateOTP(userRequestDTO.getPhoneNumber());
+           System.out.println("OTP: " + otp);
+           System.out.println("Enter the OTP ");
+           String inputOtp = otpObj.nextLine().trim(); // Trim input immediately
+
+           // Debugging to ensure input is captured correctly
+           System.out.println("Generated OTP: [" + otp + "]");
+           System.out.println("Input OTP after trim: [" + inputOtp + "]");
+           if (inputOtp.equals(otp)) {
+               System.out.println("User Created");
+
+               User usr = new User();
+               usr.setFullname(userRequestDTO.getFullname());
+               usr.setUsername(userRequestDTO.getUsername());
+               usr.setEmail(userRequestDTO.getEmail());
+               usr.setPhoneNumber(userRequestDTO.getPhoneNumber());
+               usr.setPassword(userRequestDTO.getPassword());
+               usr.setCreated_at(LocalDateTime.now());
+               usr.setUpdated_at(LocalDateTime.now());
+               User savedAccount = userRepository.save(usr);
+           } else {
+               System.out.println(inputOtp + " Incorrect OTP");
+           }
+       } finally {
+            otpObj.close();
+       }
     }
 
     public ResponseEntity<?> userSignin(UserRequestDTO userRequestDTO) {
@@ -94,6 +112,7 @@ public class UserService {
         if (!userRequestDTO.getPassword().equals(usr.getPassword())) {
             return ResponseEntity.badRequest().body("invalid email  or password. Please try again");
         }
+
         Map response = new HashMap<>();
         response.put("message", "signin successful");
         return ResponseEntity.ok().body(response);
