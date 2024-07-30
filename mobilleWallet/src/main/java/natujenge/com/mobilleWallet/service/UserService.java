@@ -2,6 +2,7 @@ package natujenge.com.mobilleWallet.service;
 
 import natujenge.com.mobilleWallet.domain.Account;
 import natujenge.com.mobilleWallet.domain.User;
+import natujenge.com.mobilleWallet.helper.Messaging;
 import natujenge.com.mobilleWallet.repository.AccountRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
 import natujenge.com.mobilleWallet.service.dto.UserRequestDTO;
@@ -31,32 +32,6 @@ public class UserService {
         Random rand = new Random();
         otp = otp + (rand.nextInt(9999 - 1001) + 1000);
 
-        String url = "https://api2.tiaraconnect.io/api/messaging/sendsms";
-
-        WebClient webClient = WebClient.create(url);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        headers.set("Authorization", "");
-
-        String message = otpMessage + otp;
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("to", phoneNumber);
-        requestBody.put("from", "TIARACONECT");
-        requestBody.put("message", message);
-        requestBody.put("refId", "09wiwu088e");
-
-        // Perform the POST request and handle the response
-        webClient.post()
-                .headers(httpHeaders -> httpHeaders.addAll(headers))
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .flatMap(res -> {
-                    return Mono.just("OTP sent");
-                })
-                .block(); // Block to wait for the response
-
         return otp;
     }
 
@@ -71,6 +46,9 @@ public class UserService {
 
        try {
            String otp = generateOTP(userRequestDTO.getPhoneNumber());
+           String message = "Your verification code for mobileWallet\n" + otp;
+           Messaging msgObj = new Messaging();
+           msgObj.sendMessage(message, userRequestDTO.getPhoneNumber());
            System.out.println("Enter the OTP ");
            String inputOtp = otpObj.nextLine().trim(); // Trim input immediately
 

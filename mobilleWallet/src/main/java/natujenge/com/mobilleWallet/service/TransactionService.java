@@ -4,6 +4,7 @@ import natujenge.com.mobilleWallet.domain.Account;
 import natujenge.com.mobilleWallet.domain.Transaction;
 import natujenge.com.mobilleWallet.domain.User;
 import natujenge.com.mobilleWallet.exceptions.UserNotFoundException;
+import natujenge.com.mobilleWallet.helper.Messaging;
 import natujenge.com.mobilleWallet.repository.AccountRepository;
 import natujenge.com.mobilleWallet.repository.TransactionRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
@@ -52,6 +53,10 @@ public class TransactionService {
         transaction.setDescription(transactionRequestDTO.getDescription());
         transaction.setTransaction_date(LocalDateTime.now());
 
+        Messaging msgObj = new Messaging();
+        String message =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been deposited to your account. Your new account balance is " + balance;
+        msgObj.sendMessage(message, user.getPhoneNumber());
+
         transactionRepository.save(transaction);
     }
 
@@ -75,6 +80,7 @@ public class TransactionService {
 
         Transaction transaction = new Transaction();
         User user = userRepository.findById(transactionRequestDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not Found"));
+        User toUser = userRepository.findById(transactionRequestDTO.getUserReceived()).orElseThrow(() -> new UserNotFoundException("User not Found"));
         transaction.setUser(user);
         transaction.setUser_received(transactionRequestDTO.getUserReceived());
         transaction.setAmount(transactionRequestDTO.getAmount());
@@ -82,6 +88,12 @@ public class TransactionService {
         transaction.setStatus(transactionRequestDTO.getStatus());
         transaction.setDescription(transactionRequestDTO.getDescription());
         transaction.setTransaction_date(LocalDateTime.now());
+
+        Messaging msgObj = new Messaging();
+        String fromMessage =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been sent to " + toUser.getPhoneNumber() + ". Your new account balance is " + fromAccountBalance;
+        String toMessage =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been received from " + user.getPhoneNumber() + ". Your new account balance is " + toAccountBalance;
+        msgObj.sendMessage(fromMessage, user.getPhoneNumber());
+        msgObj.sendMessage(toMessage, toUser.getPhoneNumber());
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
