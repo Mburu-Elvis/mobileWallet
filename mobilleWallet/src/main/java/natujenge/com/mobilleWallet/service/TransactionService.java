@@ -52,6 +52,35 @@ public class TransactionService {
     }
 
     public void transferFunds(TransactionRequestDTO transactionRequestDTO) {
+        if (accountRepository.findById(transactionRequestDTO.getUserId()) != null) {
+            if (accountRepository.findById(transactionRequestDTO.getUserReceived()) == null) {
+                throw new RuntimeException();
+            }
+        } else {
+            throw new RuntimeException();
+        }
 
+        Account fromAccount = accountRepository.findByUserId(transactionRequestDTO.getUserId());
+        BigDecimal fromAccountBalance = fromAccount.getBalance();
+        fromAccountBalance = fromAccountBalance.subtract(transactionRequestDTO.getAmount());
+        fromAccount.setBalance(fromAccountBalance);
+        Account toAccount = accountRepository.findByUserId(transactionRequestDTO.getUserReceived());
+        BigDecimal toAccountBalance = toAccount.getBalance();
+        toAccountBalance = toAccountBalance.add(transactionRequestDTO.getAmount());
+        toAccount.setBalance(toAccountBalance);
+
+        Transaction transaction = new Transaction();
+        User user = userRepository.findById(transactionRequestDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not Found"));
+        transaction.setUser(user);
+        transaction.setUser_received(transactionRequestDTO.getUserReceived());
+        transaction.setAmount(transactionRequestDTO.getAmount());
+        transaction.setTransactionType(transactionRequestDTO.getTransactionType());
+        transaction.setStatus(transactionRequestDTO.getStatus());
+        transaction.setDescription(transactionRequestDTO.getDescription());
+        transaction.setTransaction_date(LocalDateTime.now());
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
+        transactionRepository.save(transaction);
     }
 }
