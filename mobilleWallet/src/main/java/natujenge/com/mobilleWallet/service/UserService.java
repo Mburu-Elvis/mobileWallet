@@ -127,4 +127,34 @@ public class UserService {
         response.put("message", "signin successful");
         return ResponseEntity.ok().body(response);
     }
+
+    public void updateProfile(UserRequestDTO userRequestDTO) {
+        User user = userRepository.findByEmail(userRequestDTO.getEmail());
+
+        if (user == null) {
+            user = userRepository.findByUsername(userRequestDTO.getUsername());
+        }
+
+        if (user == null) {
+            throw new RuntimeException();
+        }
+
+        user.setFullname(userRequestDTO.getFullname());
+        user.setUsername(userRequestDTO.getUsername());
+        user.setPhoneNumber(user.getPhoneNumber());
+        user.setUpdated_at(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    public void changePassword(UserRequestDTO userRequestDTO) {
+        User user = userRepository.findByEmail(userRequestDTO.getEmail());
+
+        if (user == null) {
+            throw new RuntimeException();
+        }
+
+        user.setPassword(userRequestDTO.getPassword());
+
+        userRepository.save(user);
+    }
 }

@@ -8,11 +8,15 @@ import natujenge.com.mobilleWallet.repository.AccountRepository;
 import natujenge.com.mobilleWallet.repository.TransactionRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
 import natujenge.com.mobilleWallet.service.dto.TransactionRequestDTO;
+import natujenge.com.mobilleWallet.service.dto.TransactionResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -82,5 +86,30 @@ public class TransactionService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
         transactionRepository.save(transaction);
+    }
+
+    public ResponseEntity<List<TransactionResponseDTO>> generateStatement(String email) {
+        System.out.println("Starting");
+        User user = userRepository.findByEmail(email);
+        System.out.println("\nUUID: " + user.getId() + "\n");
+        List<Transaction> transactions = transactionRepository.findAllByUserId(user.getId());
+        List<TransactionResponseDTO> statements = transactions.stream().map(this::convertToDTO).collect(Collectors.toList());
+
+        return ResponseEntity.ok(statements);
+    }
+
+    private TransactionResponseDTO convertToDTO(Transaction transaction) {
+        TransactionResponseDTO dto = new TransactionResponseDTO();
+
+        User from = transaction.getUser();
+        User to = userRepository.findById(transaction.getUser_received()).orElseThrow(() -> new UserNotFoundException("user not found"));
+
+        dto.setAmount(transaction.getAmount());
+        dto.setDescription(transaction.getDescription());
+        dto.setFrom(from.getPhoneNumber());
+        dto.setUser_received(to.getPhoneNumber());
+        dto.setTransaction_date(transaction.getTransaction_date());
+
+        return dto;
     }
 }
