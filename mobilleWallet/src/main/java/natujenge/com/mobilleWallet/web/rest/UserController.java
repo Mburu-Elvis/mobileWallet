@@ -26,4 +26,14 @@ public class UserController {
     public ResponseEntity<?> signin(@RequestBody UserRequestDTO userRequestDTO) {
         return  userService.userSignin(userRequestDTO);
     }
+
+    @PutMapping(path="/users/profile")
+    public void updateProfile(@RequestBody UserRequestDTO userRequestDTO) {
+        userService.updateProfile(userRequestDTO);
+    }
+
+    @PutMapping(path="/users/password")
+    public void changePassword(@RequestBody UserRequestDTO userRequestDTO) {
+        userService.changePassword(userRequestDTO);
+    }
 }
