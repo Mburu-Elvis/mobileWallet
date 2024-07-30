@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import natujenge.com.mobilleWallet.domain.enums.TransactionStatus;
 import natujenge.com.mobilleWallet.domain.enums.TransactionType;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,15 +15,15 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID transction_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
     private TransactionType transactionType;
 
     @Column(nullable = false)
-    private float amount;
+    private BigDecimal amount = BigDecimal.ZERO;;
 
     @Column(nullable = false)
     private TransactionStatus status;
@@ -60,11 +61,11 @@ public class Transaction {
         this.transactionType = transactionType;
     }
 
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
