@@ -31,30 +31,31 @@ public class UserService {
         Random rand = new Random();
         otp = otp + (rand.nextInt(9999 - 1001) + 1000);
 
-//        String url = "https://api2.tiaraconnect.io/api/messaging/sendsms";
-//
-//        WebClient webClient = WebClient.create(url);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Content-Type", "application/json");
-//        headers.set("Authorization", "");
-//
-//        Map<String, Object> requestBody = new HashMap<>();
-//        requestBody.put("to", phoneNumber);
-//        requestBody.put("from", "TIARACONECT");
-//        requestBody.put("message", otpMessage + otp);
-//        requestBody.put("refId", "09wiwu088e");
-//
-//        // Perform the POST request and handle the response
-//        webClient.post()
-//                .headers(httpHeaders -> httpHeaders.addAll(headers))
-//                .bodyValue(requestBody)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .flatMap(res -> {
-//                    return Mono.just("OTP sent");
-//                })
-//                .block(); // Block to wait for the response
+        String url = "https://api2.tiaraconnect.io/api/messaging/sendsms";
+
+        WebClient webClient = WebClient.create(url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Authorization", "");
+
+        String message = otpMessage + otp;
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("to", phoneNumber);
+        requestBody.put("from", "TIARACONECT");
+        requestBody.put("message", message);
+        requestBody.put("refId", "09wiwu088e");
+
+        // Perform the POST request and handle the response
+        webClient.post()
+                .headers(httpHeaders -> httpHeaders.addAll(headers))
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .flatMap(res -> {
+                    return Mono.just("OTP sent");
+                })
+                .block(); // Block to wait for the response
 
         return otp;
     }
@@ -70,13 +71,9 @@ public class UserService {
 
        try {
            String otp = generateOTP(userRequestDTO.getPhoneNumber());
-           System.out.println("OTP: " + otp);
            System.out.println("Enter the OTP ");
            String inputOtp = otpObj.nextLine().trim(); // Trim input immediately
 
-           // Debugging to ensure input is captured correctly
-           System.out.println("Generated OTP: [" + otp + "]");
-           System.out.println("Input OTP after trim: [" + inputOtp + "]");
            if (inputOtp.equals(otp)) {
                System.out.println("User Created");
 
