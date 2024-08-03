@@ -1,11 +1,15 @@
 package natujenge.com.mobilleWallet.service;
 
+import com.itextpdf.text.DocumentException;
 import natujenge.com.mobilleWallet.domain.Account;
 import natujenge.com.mobilleWallet.domain.Transaction;
+import natujenge.com.mobilleWallet.domain.TransactionMessage;
 import natujenge.com.mobilleWallet.domain.User;
 import natujenge.com.mobilleWallet.exceptions.UserNotFoundException;
 import natujenge.com.mobilleWallet.helper.Messaging;
+import natujenge.com.mobilleWallet.helper.StatementGenerator;
 import natujenge.com.mobilleWallet.repository.AccountRepository;
+import natujenge.com.mobilleWallet.repository.TransactionMessageRepository;
 import natujenge.com.mobilleWallet.repository.TransactionRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
 import natujenge.com.mobilleWallet.service.dto.TransactionRequestDTO;
@@ -14,8 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +37,9 @@ public class TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TransactionMessageRepository transactionMessageRepository;
+
     public void depositFunds(TransactionRequestDTO transactionRequestDTO) {
         User user = userRepository.findById(transactionRequestDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not Found"));
 
@@ -39,9 +49,9 @@ public class TransactionService {
 
         Account account = accountRepository.findByUserId(transactionRequestDTO.getUserId());
         BigDecimal balance = account.getBalance();
+        System.out.println("Existing balance: " + balance);
         balance = balance.add(transactionRequestDTO.getAmount());
         account.setBalance(balance);
-
         accountRepository.save(account);
 
         Transaction transaction = new Transaction();
@@ -53,11 +63,28 @@ public class TransactionService {
         transaction.setDescription(transactionRequestDTO.getDescription());
         transaction.setTransaction_date(LocalDateTime.now());
 
+        LocalDateTime transactionDateTime = transaction.getTransaction_date();
+        String date = transactionDateTime.toLocalDate().toString();
+        int hour = transactionDateTime.getHour();
+        int minute = transactionDateTime.getMinute();
+
         Messaging msgObj = new Messaging();
-        String message =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been deposited to your account. Your new account balance is " + balance;
+        BigDecimal amt = transactionRequestDTO.getAmount();
+        String message = String.format("Confirmed on %s at %02d:%02d Ksh %.2f has been deposited to your account. Your new account balance is %.2f",
+                date, hour, minute, amt, balance);
         msgObj.sendMessage(message, user.getPhoneNumber());
 
-        transactionRepository.save(transaction);
+
+        Transaction savedTransaction =  transactionRepository.save(transaction);
+
+        TransactionMessage transactionMessage = new TransactionMessage();
+        transactionMessage.setTransaction(savedTransaction);
+        transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
+        transactionMessage.setTransactionMessage(message);
+        transactionMessage.setUserId(savedTransaction.getUser_received());
+
+        transactionMessageRepository.save(transactionMessage);
+
     }
 
     public void transferFunds(TransactionRequestDTO transactionRequestDTO) {
@@ -90,22 +117,47 @@ public class TransactionService {
         transaction.setTransaction_date(LocalDateTime.now());
 
         Messaging msgObj = new Messaging();
-        String fromMessage =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been sent to " + toUser.getPhoneNumber() + ". Your new account balance is " + fromAccountBalance;
-        String toMessage =  "Confirmed. Ksh" + transactionRequestDTO.getAmount() + " has been received from " + user.getPhoneNumber() + ". Your new account balance is " + toAccountBalance;
+
+        LocalDateTime transactionDateTime = transaction.getTransaction_date();
+        String date = transactionDateTime.toLocalDate().toString();
+        int hour = transactionDateTime.getHour();
+        int minute = transactionDateTime.getMinute();
+        String fromMessage = String.format("Confirmed on %s at %02d:%02d Ksh %f has been sent to %s. Your new account balance is %.2f",
+                date, hour, minute, transactionRequestDTO.getAmount(), toUser.getPhoneNumber(),toAccountBalance);
+        String toMessage = String.format("Confirmed on %s at %02d:%02d Ksh %f has been received from %s. Your new account balance is %.2f",
+                date, hour, minute, transactionRequestDTO.getAmount(), user.getPhoneNumber(),toAccountBalance);
+
         msgObj.sendMessage(fromMessage, user.getPhoneNumber());
         msgObj.sendMessage(toMessage, toUser.getPhoneNumber());
 
+        TransactionMessage transactionMessage = new TransactionMessage();
+
+
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
+        transactionMessage.setUserId(savedTransaction.getUser().getId());
+        transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
+        transactionMessage.setTransaction(savedTransaction);
+        transactionMessage.setTransactionMessage(toMessage);
+
+        transactionMessageRepository.save(transactionMessage);
+        transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
+        transactionMessage.setTransaction(savedTransaction);
+        transactionMessage.setTransactionMessage(fromMessage);
+        transactionMessage.setUserId(savedTransaction.getUser_received());
+        transactionMessageRepository.save(transactionMessage);
     }
 
-    public ResponseEntity<List<TransactionResponseDTO>> generateStatement(String email) {
+    public ResponseEntity<List<TransactionResponseDTO>> generateStatement(String email) throws DocumentException, FileNotFoundException {
         System.out.println("Starting");
         User user = userRepository.findByEmail(email);
         System.out.println("\nUUID: " + user.getId() + "\n");
         List<Transaction> transactions = transactionRepository.findAllByUserId(user.getId());
         List<TransactionResponseDTO> statements = transactions.stream().map(this::convertToDTO).collect(Collectors.toList());
+
+        StatementGenerator stmt = new StatementGenerator();
+        stmt.generateStatement(statements);;
 
         return ResponseEntity.ok(statements);
     }

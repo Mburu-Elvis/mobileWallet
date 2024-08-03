@@ -1,5 +1,6 @@
 package natujenge.com.mobilleWallet.web.rest;
 
+import com.itextpdf.text.DocumentException;
 import natujenge.com.mobilleWallet.domain.Transaction;
 import natujenge.com.mobilleWallet.service.TransactionService;
 import natujenge.com.mobilleWallet.service.dto.TransactionRequestDTO;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -28,10 +30,11 @@ public class TransactionController {
         transactionService.transferFunds(transactionRequestDTO);
     }
 
+//    @PostMapping("/withdraw")
+//    public void withdrawFunds(@)
+
     @GetMapping("/statement")
-    public ResponseEntity<List<TransactionResponseDTO>> generateStatement(@RequestParam String email) {
+    public ResponseEntity<List<TransactionResponseDTO>> generateStatement(@RequestParam String email) throws DocumentException, FileNotFoundException {
         return transactionService.generateStatement(email);
     }
-
-
 }

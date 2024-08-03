@@ -1,8 +1,10 @@
 package natujenge.com.mobilleWallet.service;
 
+import com.itextpdf.text.DocumentException;
 import natujenge.com.mobilleWallet.domain.Account;
 import natujenge.com.mobilleWallet.domain.User;
 import natujenge.com.mobilleWallet.helper.Messaging;
+import natujenge.com.mobilleWallet.helper.StatementGenerator;
 import natujenge.com.mobilleWallet.repository.AccountRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
 import natujenge.com.mobilleWallet.service.dto.UserRequestDTO;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
