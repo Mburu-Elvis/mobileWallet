@@ -18,6 +18,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'register.html',
         controller: 'RegisterController'
     })
+    .when("/Dashboard", {
+        templateUrl: 'dashboard.html',
+        controller: 'DashboardController'
+    })
     .otherwise({
         redirect: "/"
     });

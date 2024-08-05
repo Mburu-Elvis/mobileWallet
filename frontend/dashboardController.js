@@ -1,3 +1,3 @@
-app.controller("DashboardController", ["$scope", "$http", function($scope, $http) {
+app.controller("DashboardController", ["$scope", "$http", "$route", function($scope, $http, $route) {
 
 }]);
