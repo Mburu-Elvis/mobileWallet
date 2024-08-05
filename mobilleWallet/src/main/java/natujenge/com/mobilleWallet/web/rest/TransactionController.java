@@ -37,4 +37,9 @@ public class TransactionController {
     public ResponseEntity<List<TransactionResponseDTO>> generateStatement(@RequestParam String email) throws DocumentException, FileNotFoundException {
         return transactionService.generateStatement(email);
     }
+
+    @GetMapping("/statement/download")
+    public void downloadStatent(@RequestParam String email) throws DocumentException, FileNotFoundException {
+        transactionService.downloadStatement(email);
+    }
 }
