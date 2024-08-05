@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
     List<Transaction> findAllByUserId(UUID userId);
+    List<Transaction> findAllByPhoneNumber(String phoneNumber);
 }

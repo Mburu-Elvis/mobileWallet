@@ -73,6 +73,7 @@ public class TransactionService {
         String message = String.format("Confirmed on %s at %02d:%02d Ksh %.2f has been deposited to your account. Your new account balance is %.2f",
                 date, hour, minute, amt, balance);
         msgObj.sendMessage(message, user.getPhoneNumber());
+        System.out.println(message);
 
 
         Transaction savedTransaction =  transactionRepository.save(transaction);
@@ -87,7 +88,7 @@ public class TransactionService {
 
     }
 
-    public void transferFunds(TransactionRequestDTO transactionRequestDTO) {
+    public void transferFunds(TransactionRequestDTO transactionRequestDTO) throws RuntimeException {
         if (accountRepository.findById(transactionRequestDTO.getUserId()) != null) {
             if (accountRepository.findById(transactionRequestDTO.getUserReceived()) == null) {
                 throw new RuntimeException();
@@ -97,6 +98,12 @@ public class TransactionService {
         }
 
         Account fromAccount = accountRepository.findByUserId(transactionRequestDTO.getUserId());
+        if (fromAccount == null) {
+            throw new RuntimeException("Account does not exist");
+        }
+        if (fromAccount.getBalance().compareTo(transactionRequestDTO.getAmount()) < 0) {
+            throw new RuntimeException("Insufficient balance");
+        }
         BigDecimal fromAccountBalance = fromAccount.getBalance();
         fromAccountBalance = fromAccountBalance.subtract(transactionRequestDTO.getAmount());
         fromAccount.setBalance(fromAccountBalance);
@@ -122,13 +129,15 @@ public class TransactionService {
         String date = transactionDateTime.toLocalDate().toString();
         int hour = transactionDateTime.getHour();
         int minute = transactionDateTime.getMinute();
-        String fromMessage = String.format("Confirmed on %s at %02d:%02d Ksh %f has been sent to %s. Your new account balance is %.2f",
-                date, hour, minute, transactionRequestDTO.getAmount(), toUser.getPhoneNumber(),toAccountBalance);
-        String toMessage = String.format("Confirmed on %s at %02d:%02d Ksh %f has been received from %s. Your new account balance is %.2f",
+        String fromMessage = String.format("Confirmed on %s at %02d:%02d Ksh %.2f has been sent to %s. Your new account balance is %.2f",
+                date, hour, minute, transactionRequestDTO.getAmount(), toUser.getPhoneNumber(),fromAccountBalance);
+        String toMessage = String.format("Confirmed on %s at %02d:%02d Ksh %.2f has been received from %s. Your new account balance is %.2f",
                 date, hour, minute, transactionRequestDTO.getAmount(), user.getPhoneNumber(),toAccountBalance);
 
         msgObj.sendMessage(fromMessage, user.getPhoneNumber());
         msgObj.sendMessage(toMessage, toUser.getPhoneNumber());
+        System.out.println(fromMessage);
+        System.out.println(toMessage);
 
         TransactionMessage transactionMessage = new TransactionMessage();
 
@@ -150,16 +159,23 @@ public class TransactionService {
     }
 
     public ResponseEntity<List<TransactionResponseDTO>> generateStatement(String email) throws DocumentException, FileNotFoundException {
-        System.out.println("Starting");
         User user = userRepository.findByEmail(email);
-        System.out.println("\nUUID: " + user.getId() + "\n");
         List<Transaction> transactions = transactionRepository.findAllByUserId(user.getId());
         List<TransactionResponseDTO> statements = transactions.stream().map(this::convertToDTO).collect(Collectors.toList());
 
         StatementGenerator stmt = new StatementGenerator();
-        stmt.generateStatement(statements);;
+        stmt.generateStatement(statements);
 
         return ResponseEntity.ok(statements);
+    }
+
+    public void downloadStatement(String email) throws DocumentException, FileNotFoundException {
+        User user = userRepository.findByEmail(email);
+        List<Transaction> transactions = transactionRepository.findAllByUserId(user.getId());
+        List<TransactionResponseDTO> statements = transactions.stream().map(this::convertToDTO).collect(Collectors.toList());
+
+        StatementGenerator stmt = new StatementGenerator();
+        stmt.generateStatement(statements);
     }
 
     private TransactionResponseDTO convertToDTO(Transaction transaction) {
