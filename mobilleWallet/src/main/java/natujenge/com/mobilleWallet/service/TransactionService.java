@@ -5,6 +5,8 @@ import natujenge.com.mobilleWallet.domain.Account;
 import natujenge.com.mobilleWallet.domain.Transaction;
 import natujenge.com.mobilleWallet.domain.TransactionMessage;
 import natujenge.com.mobilleWallet.domain.User;
+import natujenge.com.mobilleWallet.domain.enums.TransactionStatus;
+import natujenge.com.mobilleWallet.domain.enums.TransactionType;
 import natujenge.com.mobilleWallet.exceptions.UserNotFoundException;
 import natujenge.com.mobilleWallet.helper.Messaging;
 import natujenge.com.mobilleWallet.helper.StatementGenerator;
@@ -41,13 +43,13 @@ public class TransactionService {
     private TransactionMessageRepository transactionMessageRepository;
 
     public void depositFunds(TransactionRequestDTO transactionRequestDTO) {
-        User user = userRepository.findById(transactionRequestDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not Found"));
+        User user = userRepository.findByPhoneNumber(transactionRequestDTO.getFrom());
 
-        if (accountRepository.findById(transactionRequestDTO.getUserReceived()) == null || accountRepository.findById(transactionRequestDTO.getUserId()) == null) {
+        if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom()) == null) {
             throw new RuntimeException("User does not exist");
         }
 
-        Account account = accountRepository.findByUserId(transactionRequestDTO.getUserId());
+        Account account = accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom());
         BigDecimal balance = account.getBalance();
         System.out.println("Existing balance: " + balance);
         balance = balance.add(transactionRequestDTO.getAmount());
@@ -56,10 +58,10 @@ public class TransactionService {
 
         Transaction transaction = new Transaction();
         transaction.setUser(user);
-        transaction.setUser_received(transactionRequestDTO.getUserReceived());
+        transaction.setUser_received(transactionRequestDTO.getFrom());
         transaction.setAmount(transactionRequestDTO.getAmount());
-        transaction.setTransactionType(transactionRequestDTO.getTransactionType());
-        transaction.setStatus(transactionRequestDTO.getStatus());
+        transaction.setTransactionType(TransactionType.DEPOSIT);
+        transaction.setStatus(TransactionStatus.COMPLETED);
         transaction.setDescription(transactionRequestDTO.getDescription());
         transaction.setTransaction_date(LocalDateTime.now());
 
@@ -82,22 +84,22 @@ public class TransactionService {
         transactionMessage.setTransaction(savedTransaction);
         transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
         transactionMessage.setTransactionMessage(message);
-        transactionMessage.setUserId(savedTransaction.getUser_received());
+        transactionMessage.setUserId(userRepository.findByPhoneNumber(savedTransaction.getUser_received()).getId());
 
         transactionMessageRepository.save(transactionMessage);
 
     }
 
     public void transferFunds(TransactionRequestDTO transactionRequestDTO) throws RuntimeException {
-        if (accountRepository.findById(transactionRequestDTO.getUserId()) != null) {
-            if (accountRepository.findById(transactionRequestDTO.getUserReceived()) == null) {
+        if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom()) != null) {
+            if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getTo()) == null) {
                 throw new RuntimeException();
             }
         } else {
             throw new RuntimeException();
         }
 
-        Account fromAccount = accountRepository.findByUserId(transactionRequestDTO.getUserId());
+        Account fromAccount = accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom());
         if (fromAccount == null) {
             throw new RuntimeException("Account does not exist");
         }
@@ -107,19 +109,19 @@ public class TransactionService {
         BigDecimal fromAccountBalance = fromAccount.getBalance();
         fromAccountBalance = fromAccountBalance.subtract(transactionRequestDTO.getAmount());
         fromAccount.setBalance(fromAccountBalance);
-        Account toAccount = accountRepository.findByUserId(transactionRequestDTO.getUserReceived());
+        Account toAccount = accountRepository.findByUserPhoneNumber(transactionRequestDTO.getTo());
         BigDecimal toAccountBalance = toAccount.getBalance();
         toAccountBalance = toAccountBalance.add(transactionRequestDTO.getAmount());
         toAccount.setBalance(toAccountBalance);
 
         Transaction transaction = new Transaction();
-        User user = userRepository.findById(transactionRequestDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not Found"));
-        User toUser = userRepository.findById(transactionRequestDTO.getUserReceived()).orElseThrow(() -> new UserNotFoundException("User not Found"));
+        User user = userRepository.findByPhoneNumber(transactionRequestDTO.getFrom());
+        User toUser = userRepository.findByPhoneNumber(transactionRequestDTO.getTo());
         transaction.setUser(user);
-        transaction.setUser_received(transactionRequestDTO.getUserReceived());
+        transaction.setUser_received(transactionRequestDTO.getTo());
         transaction.setAmount(transactionRequestDTO.getAmount());
-        transaction.setTransactionType(transactionRequestDTO.getTransactionType());
-        transaction.setStatus(transactionRequestDTO.getStatus());
+        transaction.setTransactionType(TransactionType.TRANSFER);
+        transaction.setStatus(TransactionStatus.COMPLETED);
         transaction.setDescription(transactionRequestDTO.getDescription());
         transaction.setTransaction_date(LocalDateTime.now());
 
@@ -154,7 +156,7 @@ public class TransactionService {
         transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
         transactionMessage.setTransaction(savedTransaction);
         transactionMessage.setTransactionMessage(fromMessage);
-        transactionMessage.setUserId(savedTransaction.getUser_received());
+        transactionMessage.setUserId(userRepository.findByPhoneNumber(transactionRequestDTO.getTo()).getId());
         transactionMessageRepository.save(transactionMessage);
     }
 
@@ -182,7 +184,7 @@ public class TransactionService {
         TransactionResponseDTO dto = new TransactionResponseDTO();
 
         User from = transaction.getUser();
-        User to = userRepository.findById(transaction.getUser_received()).orElseThrow(() -> new UserNotFoundException("user not found"));
+        User to = userRepository.findByPhoneNumber(transaction.getUser_received());
 
         dto.setAmount(transaction.getAmount());
         dto.setDescription(transaction.getDescription());
