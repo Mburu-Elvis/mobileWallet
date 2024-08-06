@@ -29,7 +29,7 @@ public class Transaction {
     private TransactionStatus status;
 
     @Column(nullable = false)
-    private UUID user_received;
+    private String user_received;
 
     @Column(nullable = false)
     private LocalDateTime transaction_date;
@@ -77,11 +77,11 @@ public class Transaction {
         this.status = status;
     }
 
-    public UUID getUser_received() {
+    public String getUser_received() {
         return user_received;
     }
 
-    public void setUser_received(UUID user_received) {
+    public void setUser_received(String user_received) {
         this.user_received = user_received;
     }
 
@@ -109,7 +109,7 @@ public class Transaction {
                 ", transactionType=" + transactionType +
                 ", amount=" + amount +
                 ", status=" + status +
-                ", user_received=" + user_received +
+                ", user_received='" + user_received + '\'' +
                 ", transaction_date=" + transaction_date +
                 ", description='" + description + '\'' +
                 '}';

@@ -8,13 +8,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class TransactionRequestDTO {
-    private BigDecimal amount;
-    private TransactionStatus status;
-    private TransactionType transactionType;
-    private UUID userReceived;
-    private UUID userId;
+    private BigDecimal amount;;
+    private String from;
+    private String to;
     private String description;
-
 
     public BigDecimal getAmount() {
         return amount;
@@ -24,36 +21,20 @@ public class TransactionRequestDTO {
         this.amount = amount;
     }
 
-    public TransactionStatus getStatus() {
-        return status;
+    public String getFrom() {
+        return from;
     }
 
-    public void setStatus(TransactionStatus status) {
-        this.status = status;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public String getTo() {
+        return to;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public UUID getUserReceived() {
-        return userReceived;
-    }
-
-    public void setUserReceived(UUID userReceived) {
-        this.userReceived = userReceived;
-    }
-
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getDescription() {
@@ -68,10 +49,8 @@ public class TransactionRequestDTO {
     public String toString() {
         return "TransactionRequestDTO{" +
                 "amount=" + amount +
-                ", status=" + status +
-                ", transactionType=" + transactionType +
-                ", userReceived=" + userReceived +
-                ", userId=" + userId +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
