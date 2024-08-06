@@ -1,0 +1,59 @@
+.auth-body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:#fff;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container{
+    width: 100%;
+    max-width: 400px;
+    padding:20px;
+    background:#fff;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1);
+}
+form{
+    width:100%;
+    max-width: 600px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #007bff;
+    box-shadow: rgba(o, 0,0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+label {
+    margin:10px 0 5px;
+    font-weight: bold;
+}
+input[type="email"],
+input[type="password"],
+input[type="phonenumber"],
+input[type="fullname"],
+input[type="username"]
+{
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+button{
+    padding:10px;
+    font-size: 16px;
+    background-color: green;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: #0056b3;
+}
+
+a.signing {
+    color: blue;
+}
