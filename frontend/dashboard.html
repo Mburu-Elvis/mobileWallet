@@ -1,19 +1,32 @@
 <div ng-controller="DashboardController">
     <div class="dashboard">
         <button class="button" ng-click="sendMoney()" data-bs-toggle="modal" data-bs-target="#sendMoney">Send Money</button>
-        <button class="button" ng-click="payMoney()">Pay Money</button>
-        <button class="button" ng-click="withdrawMoney()">Withdraw Money</button>
-        <button class="button" ng-click="receiveMoney()">Receive Money</button>
+        <button class="button" ng-click="payMoney()"data-bs-toggle="modal" data-bs-target="#payMoney">Pay Money</button>
+        <button class="button" ng-click="withdrawMoney()"data-bs-toggle="modal" data-bs-target="#withdrawMoney">Withdraw Money</button>
+        <button class="button" ng-click="receiveMoney()"data-bs-toggle="modal" data-bs-target="#receiveMoney">Receive Money</button>
 
-        <div class="modal fade" id="sendMoney" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="sendMoney" tabindex="-1" aria-labelledby="sendMoneyLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <h5 class="modal-title" id="sendMoneyLabel">Modal title</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  ...
+                  <form ng-submit="sendMoney()">
+                    {
+                        "amount":"0",
+                        "to": "PhoneNumber",
+                        "description": "bills",
+
+                    }
+                    <label for="amount">Amount :</label>
+                    <input type="number" name="amount" id="amount" ng-model="sendForm.amount">
+                    <label for="to">To:</label>
+                    <input type="number" name="to" id="to" ng-model="sendForm.to">
+                    <label for="description">Description:</label>
+                    <input type="text" name="description" id="amount" ng-model="sendForm.description">
+                  </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
