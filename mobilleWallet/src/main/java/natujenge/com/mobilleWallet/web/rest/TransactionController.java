@@ -30,8 +30,11 @@ public class TransactionController {
         transactionService.transferFunds(transactionRequestDTO);
     }
 
-//    @PostMapping("/withdraw")
-//    public void withdrawFunds(@)
+    @PostMapping("/withdraw")
+    public void withdrawFunds(@RequestBody TransactionRequestDTO transactionRequestDTO) {
+        System.out.println("Received: " + transactionRequestDTO);
+        transactionService.withdrawFunds(transactionRequestDTO);
+    }
 
     @GetMapping("/statement")
     public ResponseEntity<List<TransactionResponseDTO>> generateStatement(@RequestParam String email) throws DocumentException, FileNotFoundException {
