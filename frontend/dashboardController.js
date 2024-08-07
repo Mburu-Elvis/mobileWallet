@@ -67,7 +67,6 @@ app.controller("DashboardController", ["$scope", "$http", "$route", function($sc
                     }).then(function(response) {
                         // Success callback
                         console.log('Accounts:', response);
-                        $scope.refreshAccounts();
             	    $scope.sendForm = {};
                     }, function(error) {
                         // Error callback
