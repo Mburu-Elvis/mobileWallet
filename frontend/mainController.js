@@ -1,5 +1,17 @@
 var app = angular.module("myApp", ['ngRoute']);
 
+app.controller("MainController", function($scope, $location) {
+    $scope.isSignIn = function() {
+        return $location.path() === '/SignIn';
+    };
+    $scope.isRegister = function() {
+        return $location.path() === "/";
+    }
+    $scope.hideSidebar = function() {
+            return $scope.isSignIn() || $scope.isRegister();
+       };
+});
+
 app.config(function ($routeProvider) {
     $routeProvider
     .when("/", {
