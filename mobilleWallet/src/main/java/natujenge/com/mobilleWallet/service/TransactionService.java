@@ -90,6 +90,53 @@ public class TransactionService {
 
     }
 
+    public void withdrawFunds(TransactionRequestDTO transactionRequestDTO) {
+        User user = userRepository.findByPhoneNumber(transactionRequestDTO.getFrom());
+
+        if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom()) == null) {
+            throw new RuntimeException("User does not exist");
+        }
+
+        Account account = accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom());
+        BigDecimal balance = account.getBalance();
+        System.out.println("Existing balance: " + balance);
+        balance = balance.subtract(transactionRequestDTO.getAmount());
+        account.setBalance(balance);
+        accountRepository.save(account);
+
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setUser_received(transactionRequestDTO.getFrom());
+        transaction.setAmount(transactionRequestDTO.getAmount());
+        transaction.setTransactionType(TransactionType.DEPOSIT);
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        transaction.setDescription(transactionRequestDTO.getDescription());
+        transaction.setTransaction_date(LocalDateTime.now());
+
+        LocalDateTime transactionDateTime = transaction.getTransaction_date();
+        String date = transactionDateTime.toLocalDate().toString();
+        int hour = transactionDateTime.getHour();
+        int minute = transactionDateTime.getMinute();
+
+        Messaging msgObj = new Messaging();
+        BigDecimal amt = transactionRequestDTO.getAmount();
+        String message = String.format("Confirmed on %s at %02d:%02d Ksh %.2f has been withdrawn from your account. Your new account balance is %.2f",
+                date, hour, minute, amt, balance);
+        msgObj.sendMessage(message, user.getPhoneNumber());
+        System.out.println(message);
+
+
+        Transaction savedTransaction =  transactionRepository.save(transaction);
+
+        TransactionMessage transactionMessage = new TransactionMessage();
+        transactionMessage.setTransaction(savedTransaction);
+        transactionMessage.setTransactionDate(savedTransaction.getTransaction_date());
+        transactionMessage.setTransactionMessage(message);
+        transactionMessage.setUserId(userRepository.findByPhoneNumber(savedTransaction.getUser_received()).getId());
+
+        transactionMessageRepository.save(transactionMessage);
+    }
+
     public void transferFunds(TransactionRequestDTO transactionRequestDTO) throws RuntimeException {
         if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getFrom()) != null) {
             if (accountRepository.findByUserPhoneNumber(transactionRequestDTO.getTo()) == null) {

@@ -52,7 +52,7 @@
 
                     } -->
                     <label for="amount">Amount :</label>
-                    <input type="number" name="amount" id="amount" ng-model="sendForm.amount"> <br>
+                    <input type="number" name="amount" id="amount1" ng-model="sendForm.amount"> <br>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Send</button>
@@ -62,5 +62,32 @@
               </div>
             </div>
           </div>
+
+        <div class="modal fade" id="withdrawMoney" tabindex="-1" aria-labelledby="depositMoneyLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="withdrawMoneyLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form ng-submit="withdrawMoney()">
+                            <!-- {
+                                "amount":"0",
+                                "to": "PhoneNumber",
+                                "description": "bills",
+
+                            } -->
+                            <label for="amount">Amount :</label>
+                            <input type="number" name="amount" id="amount2" ng-model="sendForm.amount"> <br>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
