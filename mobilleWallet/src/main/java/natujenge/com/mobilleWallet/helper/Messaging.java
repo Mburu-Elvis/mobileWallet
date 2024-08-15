@@ -15,7 +15,7 @@ public class Messaging {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        headers.set("Authorization", "");
+        headers.set("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzNjEiLCJvaWQiOjM2MSwidWlkIjoiZTZlMjBhNjQtMGNiMy00NWVmLWI3NTEtNjlkMWJjOTdiMDI0IiwiYXBpZCI6MzI2LCJpYXQiOjE3MTkxODE1NTAsImV4cCI6MjA1OTE4MTU1MH0.O_oZah_evCS4QH2ANlDx2A8UL8o83rvFhidrrQ7TFcZIEwBPTiwpHCxuGcXxDu4cKBpAveI7msYB5LdcPwKUlw");
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("to", phoneNumber);

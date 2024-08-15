@@ -8,6 +8,7 @@ import natujenge.com.mobilleWallet.helper.StatementGenerator;
 import natujenge.com.mobilleWallet.repository.AccountRepository;
 import natujenge.com.mobilleWallet.repository.UserRepository;
 import natujenge.com.mobilleWallet.service.dto.UserRequestDTO;
+import natujenge.com.mobilleWallet.service.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -104,8 +105,13 @@ public class UserService {
             return ResponseEntity.badRequest().body("invalid email  or password. Please try again");
         }
 
-        Map response = new HashMap<>();
-        response.put("message", "signin successful");
+        UserResponseDTO response = new UserResponseDTO();
+        response.setName(usr.getFullname());
+        Account usrAcc = accountRepository.findByUserPhoneNumber(usr.getPhoneNumber());
+        response.setBalance(usrAcc.getBalance());
+        response.setPhoneNumber(usr.getPhoneNumber());
+        response.setPassword(usr.getPassword());
+        response.setUsername(usr.getUsername());
         return ResponseEntity.ok().body(response);
     }
 
