@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountNotFoundException;
+
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping(path="/signin")
-    public ResponseEntity<?> signin(@RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> signin(@RequestBody UserRequestDTO userRequestDTO) throws AccountNotFoundException {
         return  userService.userSignin(userRequestDTO);
     }
 
