@@ -2,11 +2,19 @@
 FROM openjdk:17-jdk-slim
 
 # Set the working directory in the container
-WORKDIR mobileWallet/mobilleWallet/
+WORKDIR /app
 
-RUN MKDIR target
+# Copy the Maven wrapper and project files into the container
+COPY mvnw .
+COPY mvnw.cmd .
+COPY .mvn .mvn
+COPY pom.xml .
 
-RUN mvn clean package -DskipTests
+# Copy the source code into the container
+COPY src src
+
+# Run Maven to build the project
+RUN ./mvnw clean package -DskipTests
 
 # Copy the JAR file from the target directory into the container
 COPY target/mobilleWallet-0.0.1-SNAPSHOT.jar /app/mobilleWallet.jar
