@@ -1,6 +1,7 @@
-app.controller("RegisterController", ["$scope", "$http", "$location", function($scope, $http, $location) {
+app.controller("RegisterController", ["$scope", "$http", "$location", "UserService", function($scope, $http, $location, UserService) {
 
     $scope.registerForm = {};
+    $scope.url = 'https://mobilewallet.onrender.com/api/v1';
 
     $scope.register = function() {
 
@@ -8,14 +9,12 @@ app.controller("RegisterController", ["$scope", "$http", "$location", function($
         $http({
             method: 'POST',
             headers: {
-                'ngrok-skip-browser-warning': 'hello',
                 'Content-Type': 'application/json'
             },
             data: $scope.registerForm,
-            url: 'https://stallion-holy-informally.ngrok-free.app/api/v1/register',
+            url: $scope.url + '/register',
         }).then(function(response) {
             // Success callback
-            console.log('register:', response);
 	        $scope.registerForm = {};
 	        $location.path('/Dashboard');
         }, function(error) {
@@ -27,19 +26,20 @@ app.controller("RegisterController", ["$scope", "$http", "$location", function($
 
      $scope.signIn = function() {
 
-            console.log($scope.sendForm)
+            console.log($scope.registerForm)
             $http({
                 method: 'POST',
                 headers: {
-                    'ngrok-skip-browser-warning': 'hello',
                     'Content-Type': 'application/json'
                 },
                 data: $scope.registerForm,
-                url: 'https://stallion-holy-informally.ngrok-free.app/api/v1/signin',
+                url: $scope.url + '/signin',
             }).then(function(response) {
                 // Success callback
-                console.log('register:', response);
+                console.log('SignIn:', response);
     	        $scope.registerForm = {};
+//    	        UserService.clearUser();
+    	        UserService.setUser(response.data);
     	        $location.path('/Dashboard');
             }, function(error) {
                 // Error callback

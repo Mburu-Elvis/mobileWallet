@@ -10,14 +10,17 @@
         <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="sidebar.css">
         <link rel="stylesheet" href="signin.css">
+        <link rel="stylesheet" href="dashboard.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     </head>
     <body ng-controller="MainController">
         <main class="full-height">
             <div class="d-flex flex-row full-height">
                 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" ng-hide="hideSidebar()">
                     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-                        <span class="fs-4">MobileWallet</span>
+                       <span class="fs-4">
+                            MobileWallet
+                        </span>
                     </a>
                     <hr>
                     <ul class="nav nav-pills flex-column mb-auto">
@@ -32,9 +35,14 @@
                         </li>
                     </ul>
                     <hr>
-                    <a href="#!/Logout" class="nav-link text-white">Logout</a>
+                    <a href="/" class="nav-link text-white" ng-click="logout()">Logout</a>
                 </div>
                 <div class="d-flex flex-column p3">
+                    <div class="navbar"  ng-hide="hideSidebar()">
+                        <p>Hello @{{user.name}}</p>
+
+                    </div>
+                    <hr>
                     <div ng-view></div>
                 </div>
 
@@ -46,5 +54,6 @@
         <script src="registerController.js"></script>
         <script src="dashboardController.js"></script>
         <script src="accountController.js"></script>
+        <script src="userService.js"></script>
     </body>
 </html>
