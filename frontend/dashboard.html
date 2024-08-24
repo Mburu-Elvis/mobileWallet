@@ -7,26 +7,30 @@
   </p>
   </div>
     <div class="dashboard">
-      <button class="button" data-bs-toggle="modal" data-bs-target="#sendMoney">
-        <i class="bi bi-send icon"></i>
-        <span class="button-text">Send Money</span>
-    </button>
+        <div class="button-container">
+            <button class="button" data-bs-toggle="modal" data-bs-target="#sendMoney">
+                <i class="bi bi-send icon"></i>
+                <span class="button-text">Send Money</span>
+            </button>
 
-        <button class="button" data-bs-toggle="modal" data-bs-target="#payMoney">
-        <i class="bi bi-cash-coin"></i>
-        <span class="button-text">pay money</span>
-        </button>
+            <button class="button" data-bs-toggle="modal" data-bs-target="#payMoney">
+                <i class="bi bi-cash-coin"></i>
+                <span class="button-text">pay money</span>
+            </button>
 
-        <button class="button" data-bs-toggle="modal" data-bs-target="#withdrawMoney">
-        <i class="bi bi-box-arrow-down"></i>
-        <span class="button-text">Withdraw Money</span>
-        </button>
+            <button class="button" data-bs-toggle="modal" data-bs-target="#withdrawMoney">
+                <i class="bi bi-box-arrow-down"></i>
+                <span class="button-text">Withdraw Money</span>
+            </button>
 
-        <button class="button" data-bs-toggle="modal" data-bs-target="#depositMoney">
-          <i class="bi bi-bank"></i>
-        <span class="button-text">Deposit Money</span>
-        </button>
-    
+            <button class="button" data-bs-toggle="modal" data-bs-target="#depositMoney">
+                <i class="bi bi-bank"></i>
+                <span class="button-text">Deposit Money</span>
+            </button>
+        </div>
+        <div class="latest-activity">
+            <p class="title">Latest Activity <span>View all</span></p>
+        </div>
 
         <div class="modal fade" id="sendMoney" tabindex="-1" aria-labelledby="sendMoneyLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -67,19 +71,19 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form ng-submit="depositMoney()">
-                    <!-- {
-                        "amount":"0",
-                        "to": "PhoneNumber",
-                        "description": "bills",
+                    <form ng-submit="depositMoney()">
+                        <!-- {
+                            "amount":"0",
+                            "to": "PhoneNumber",
+                            "description": "bills",
 
-                    } -->
-                    <label for="amount">Amount :</label>
-                    <input type="number" name="amount" id="amount1" ng-model="sendForm.amount"> <br>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Send</button>
-                  </div>
+                        } -->
+                        <label for="amount">Amount :</label>
+                        <input type="number" name="amount" id="amount1" ng-model="sendForm.amount"> <br>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Send</button>
+                      </div>
                   </form>
                 </div>
               </div>

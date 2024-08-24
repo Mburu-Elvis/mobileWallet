@@ -1,6 +1,19 @@
 var app = angular.module("myApp", ['ngRoute']);
 
-app.controller("MainController", function($scope, $location) {
+app.controller("MainController", function($scope, $location, UserService) {
+   $scope.user = UserService.getUser();
+   $scope.balance = $scope.user.balance;
+
+    $scope.isLoggedIn = function() {
+        return UserService.isAuthenticated();
+    };
+     $scope.logout = function() {
+            // Clear user data from UserService and localStorage
+        UserService.clearUser();
+        console.log("User cleared");
+        $location.path('/signin');
+
+     };
     $scope.isSignIn = function() {
         return $location.path() === '/SignIn';
     };
@@ -9,7 +22,7 @@ app.controller("MainController", function($scope, $location) {
     }
     $scope.hideSidebar = function() {
             return $scope.isSignIn() || $scope.isRegister();
-       };
+    };
 });
 
 app.config(function ($routeProvider) {
