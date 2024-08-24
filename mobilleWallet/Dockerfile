@@ -4,6 +4,10 @@ FROM openjdk:17-jdk-slim
 # Set the working directory in the container
 WORKDIR mobileWallet/mobilleWallet/
 
+MKDIR target
+
+RUN mvn clean package -DskipTests
+
 # Copy the JAR file from the target directory into the container
 COPY target/mobilleWallet-0.0.1-SNAPSHOT.jar /app/mobilleWallet.jar
 
