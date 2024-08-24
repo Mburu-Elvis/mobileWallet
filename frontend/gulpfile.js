@@ -4,6 +4,7 @@ const uglify = require('gulp-uglify');
 const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const htmlmin = require('gulp-htmlmin');
+const sass = require('gulp-sass')(require('sass'));
 
 // Task to minify HTML
 function minifyHtml() {
@@ -14,7 +15,7 @@ function minifyHtml() {
 
 // Task to compile and minify SASS
 function compileSass() {
-    return gulp.src(['styles.scss', 'dashboard.scss', 'signin.scss']) // Adjust file extensions if necessary
+    return gulp.src(['styles.css', 'dashboard.css', 'signin.css']) // Adjust file extensions if necessary
         .pipe(sass().on('error', sass.logError))
         .pipe(cleanCSS())
         .pipe(rename({ suffix: '.min' }))
@@ -31,7 +32,7 @@ function minifyScripts() {
 }
 
 // Define the build task
-exports.build = gulp.series(minifyHtml, minifyScripts);
+exports.build = gulp.series(minifyHtml, compileSass, minifyScripts);
 
 // Default task
 exports.default = exports.build;
