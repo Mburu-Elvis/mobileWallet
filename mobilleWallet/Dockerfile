@@ -4,7 +4,7 @@ FROM openjdk:17-jdk-slim
 # Set the working directory in the container
 WORKDIR mobileWallet/mobilleWallet/
 
-MKDIR target
+RUN MKDIR target
 
 RUN mvn clean package -DskipTests
 
