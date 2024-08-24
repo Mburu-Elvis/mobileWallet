@@ -10,6 +10,7 @@ import javax.security.auth.login.AccountNotFoundException;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "http://127.0.0.1:8081")
 public class UserController {
     @Autowired
     UserService userService = new UserService();

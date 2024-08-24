@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payments")
+@CrossOrigin(origins = "http://127.0.0.1:8081")
 public class TransactionController {
     @Autowired
     TransactionService transactionService = new TransactionService();
