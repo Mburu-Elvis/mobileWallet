@@ -10,12 +10,13 @@ import java.util.Map;
 public class Messaging {
     public void sendMessage(String message, String phoneNumber) {
         String url = "https://api2.tiaraconnect.io/api/messaging/sendsms";
+        String API_KEY = System.getenv("TIARA_API");
 
         WebClient webClient = WebClient.create(url);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        headers.set("Authorization", "");
+        headers.set("Authorization", API_KEY);
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("to", phoneNumber);
