@@ -93,7 +93,11 @@ public class UserService {
         }
 
         User usr = userRepository.findByEmail(userRequestDTO.getEmail());
-        if (usr == null && userRequestDTO.getUsername() != null) {
+
+        if (usr == null) {
+            throw new RuntimeException("user not found");
+        }
+        if (userRequestDTO.getUsername() != null) {
             usr = userRepository.findByUsername(userRequestDTO.getUsername());
         }
 
@@ -102,7 +106,7 @@ public class UserService {
         }
 
         if (!userRequestDTO.getPassword().equals(usr.getPassword())) {
-            return ResponseEntity.badRequest().body("invalid email  or password. Please try again");
+            return ResponseEntity.badRequest().body("invalid email or password. Please try again");
         }
 
         UserResponseDTO response = new UserResponseDTO();
