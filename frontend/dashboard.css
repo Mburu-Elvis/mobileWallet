@@ -1,13 +1,11 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #343a40;
-    margin: 0;
-    padding: 0;
-}
-
 /* Dashboard container */
 .dashboard {
+    margin-left: 300px;;
+    width: 80%;
+    align-items: center;
+}
+
+.button-container {
     display: flex;
     flex-direction: row;
     flex-wrap:wrap;
@@ -39,8 +37,8 @@ body {
     border-radius: 10px;
     cursor: pointer;
    /* transition: background-color 0.3s ease;*/
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: 150px;
     text-align: center;
     flex-direction: column;
     display: flex;
