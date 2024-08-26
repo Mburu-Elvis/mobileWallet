@@ -1,0 +1,35 @@
+.accounts-section {
+    display: flex;
+}
+
+.accounts-section .accounts-sidebar {
+    width: 280px;
+}
+
+.accounts-section .accounts-main {
+    width: 750px;
+}
+
+
+.profile-picture {
+    background-color: #276749;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.accounts-main .profile-picture img {
+    max-height: 50%;
+    border-radius: 50%;
+}
+
+.accounts-main form {
+    margin: auto;
+    padding: auto;
+    width: 750px;
+}
+
+.accounts-main form .update-profile {
+    background-color: #276749;
+}

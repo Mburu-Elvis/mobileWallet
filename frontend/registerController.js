@@ -1,7 +1,8 @@
 app.controller("RegisterController", ["$scope", "$http", "$location", "UserService", function($scope, $http, $location, UserService) {
 
     $scope.registerForm = {};
-    $scope.url = 'https://mobilewallet.onrender.com/api/v1';
+//    $scope.url = 'https://mobilewallet.onrender.com/api/v1';
+    $scope.url = 'https://stallion-holy-informally.ngrok-free.app/api/v1';
 
     $scope.register = function() {
 
@@ -9,6 +10,7 @@ app.controller("RegisterController", ["$scope", "$http", "$location", "UserServi
         $http({
             method: 'POST',
             headers: {
+                'ngrok-skip-browser-warning': 'hello',
                 'Content-Type': 'application/json'
             },
             data: $scope.registerForm,
@@ -30,6 +32,7 @@ app.controller("RegisterController", ["$scope", "$http", "$location", "UserServi
             $http({
                 method: 'POST',
                 headers: {
+                    'ngrok-skip-browser-warning': 'hello',
                     'Content-Type': 'application/json'
                 },
                 data: $scope.registerForm,
