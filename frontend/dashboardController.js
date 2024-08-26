@@ -1,7 +1,7 @@
 app.controller("DashboardController", ["$scope", "$http", "$route", "UserService", "$location", function($scope, $http, $route, UserService, $location) {
     $scope.sendForm = {};
     // $scope.url = 'https://mobilewallet.onrender.com/api/v1';
-    $scope.url = 'https://stallion-holy-informally.ngrok-free.app/api/v1';
+    $scope.url = 'https://stallion-holy-informally.ngrok-free.app/api/v';
 //    if (UserService.isAuthenticated()) {
 //        $scope.user = UserService.getUser();
 //        return $location.path("/Dashboard");
