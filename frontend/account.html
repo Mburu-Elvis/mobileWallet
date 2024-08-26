@@ -1,0 +1,32 @@
+<div ng-controller="AccountController" class="accounts-section">
+    <div class="accounts-sidebar">
+        <ul>
+            <li>Profile</li>
+            <li>Change Password</li>
+        </ul>
+    </div>
+    <div class="accounts-main">
+        <div class="update-kyc">
+            <h2>Edit profile</h2>
+            <div class="profile-picture">
+                <img src="images/Elvis Picture.jpg" alt="">
+            </div>
+            <form ng-click="updateProfile()">
+                <input class="form-control" type="text" name="name" id="name" ng-model="user.name" aria-label="name">
+                <input type="email" name="email" id="email" ng-model="user.email" aria-label="email">
+                <input type="text" name="bio" id="bio" placeholder="bio" aria-label="bio" readonly>
+                <input type="text" name="number" id="number" ng-model="user.phoneNumber" aria-label="number">
+                <input type="submit" class="update-profile" value="Save">
+            </form>
+        </div>
+        <div class="change-password">
+            <h2>Reset your password</h2>
+            <p>Enter your email and we'll send a link to reset your password</p>
+            <form>
+                <input type="email" name="email" id="change-password-email" ng-model="sendForm.email" aria-label="email" placeholder="Enter your email address">
+                <input type="text" name="number" id="change-password-number" ng-model="sendForm.phoneNumber" aria-label="number" placeholder="Enter your Phone Number">
+                <input type="submit" value="Send" class="update-profile">
+            </form>
+        </div>
+    </div>
+</div>

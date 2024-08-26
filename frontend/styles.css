@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.full-height {
+    height: 100%;
+}
+.components {
+    margin-left: 280px;
+    padding-top: 200px;
+    height: 100%;
+}
