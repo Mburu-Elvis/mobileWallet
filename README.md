@@ -69,7 +69,7 @@ This section highligts the key features of the wallet system, providing a brief 
 ### Configuration
 
 - Open the export_variable.sh script in `configs` and set the required environment variables.  
-> For the API_KEY you can register in [TIARACONNECT](https://app.tiaraconnect.io) and create a project and copy the API key generated.
+> For the API_KEY you can register in [TIARACONNECT](https://app.tiaraconnect.io/#/signup) and create a project and copy the API key generated.
 > Save the changes
 - run the executable file
 ```bash
