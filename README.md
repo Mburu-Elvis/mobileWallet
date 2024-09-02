@@ -110,5 +110,5 @@ This project is licensed under the MIT License - see the [LICENSE](license) file
 
 ### Contact
 
-- Maintained by [Elvis Mburu](https://linktr.ee/mburuelvis)  
+- Maintained by [Elvis Mburu](https://linktr.ee/mburuelvis), [Martin Kagua]() and [Feiz Mbai]()
 For any questions or suggestions, feel free to reach out at [mburuelvis310@gmail.com](mailto:mburuelvis310@gmail.com)
