@@ -75,15 +75,16 @@ This section highligts the key features of the wallet system, providing a brief 
 > ```bash
 # example
 ./export_variable.sh
-- if you have a different java version from 17 you can change it temporaly
 ```
+- if you have a different java version from 17 you can change it temporaly
+```bash
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 - run the backend service
-> ```bash
+```bash
 mvn springboot:run
-
+```
 ### Contributing
 
 We welcome contributions! To contribute, please follow the following steps
