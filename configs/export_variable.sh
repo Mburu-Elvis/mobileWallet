@@ -4,3 +4,4 @@
 export DATABASE_URL=jdbc:mysql://localhost:3306/mydb
 export DATABASE_USERNAME=myuser
 export DATABASE_PASSWORD=mypassword
+export API_KEY=""
