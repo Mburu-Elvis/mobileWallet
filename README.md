@@ -111,7 +111,7 @@ This project is licensed under the MIT License - see the [LICENSE](license) file
 ### Contact
 
 - Maintained by:  
-> - [Elvis Mburu](https://linktr.ee/mburuelvis)
+> - <a href="https://linktr.ee/mburuelvis" target="_blank">Elvis Mburu</a>
 > - [Martin Kagua]()
 > - [Feiz Mbai]()  
 
