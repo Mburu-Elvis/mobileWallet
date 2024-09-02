@@ -72,7 +72,7 @@ This section highligts the key features of the wallet system, providing a brief 
 > For the API_KEY you can register in [TIARACONNECT](https://api.tiaraconnect.io) and create a project and copy the API key generated.
 > Save the changes
 - run the executable file
-> ```bash
+```bash
 # example
 ./export_variable.sh
 ```
